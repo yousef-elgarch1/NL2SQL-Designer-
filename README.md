@@ -1,4 +1,4 @@
-# 🗄️ SchemaForge AI
+# 🗄️ NL2SQL Desginer AI
 ## AI-Powered Database Schema Generator with Model-Driven Engineering
 
 ### 📋 Project Overview
