@@ -38,7 +38,8 @@ SchemaForge AI is an intelligent system that transforms natural language descrip
 ```
 
 ---
-
+## Pipeline§
+![Uploading image.png…]()
 ## 🔧 Technology Stack
 
 ### **Frontend**
