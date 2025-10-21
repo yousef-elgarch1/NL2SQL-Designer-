@@ -1,836 +1,1545 @@
-# 🗄️ NL2SQL Desginer AI
-## AI-Powered Database Schema Generator with Model-Driven Engineering
+# 🗄️ NL2SQL Generator
 
-### 📋 Project Overview
+## AI-Powered Database Schema Designer with Natural Language Processing
 
-SchemaForge AI is an intelligent system that transforms natural language descriptions into production-ready database schemas through automated UML diagram generation. Built on Model-Driven Engineering (MDE) principles, it bridges the gap between business requirements and technical implementation.
-
-**Key Value Proposition**: From idea to database schema in minutes, not hours.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![React](https://img.shields.io/badge/React-18+-61DAFB.svg)](https://reactjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
 
 ---
 
-## 🎯 Project Objectives
+## 📋 Table of Contents
 
-- **Democratize Database Design**: Enable non-technical stakeholders to participate in schema design
-- **Accelerate Development**: Reduce schema design time from hours to minutes
-- **Ensure Consistency**: Standardize database design patterns across projects
-- **Multi-Platform Support**: Generate optimized SQL for different database engines
-- **Visual Validation**: Provide UML diagrams for better understanding and validation
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [System Architecture](#-system-architecture)
+- [Complete Workflow](#-complete-workflow)
+- [Technology Stack](#-technology-stack)
+- [LLM Selection](#-llm-selection--reasoning)
+- [Installation](#-installation)
+- [Usage Guide](#-usage-guide)
+- [Project Structure](#-project-structure)
+- [Development Roadmap](#-development-roadmap)
+- [API Documentation](#-api-documentation)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## 🎯 Overview
+
+**NL2SQL Generator** is an intelligent system that transforms natural language descriptions into production-ready database schemas through automated diagram generation, real-time editing, and multi-database SQL generation.
+
+### **The Problem**
+Traditional database design requires:
+- Deep technical knowledge of SQL and data modeling
+- Hours of manual schema creation and validation
+- Separate tools for diagrams and SQL generation
+- Multiple iterations to get it right
+
+### **Our Solution**
+```
+Natural Language → AI Validation → Visual Diagram → SQL Code → Live Database
+     (1 min)            (1 min)         (2 min)        (1 min)      (1 min)
+```
+
+**Total Time: ~5 minutes** instead of hours!
+
+---
+
+## ✨ Key Features
+
+### 🧠 **Intelligent Prompt Validation**
+- Dynamic domain learning (no pre-defined templates needed)
+- Interactive prompt completion with AI suggestions
+- Automatic detection of missing entities, attributes, and relationships
+- Universal database structure extraction
+
+### 🎨 **Real-Time Visual Editing**
+- Three editing modes:
+  - 📝 **AI Modification**: Natural language commands
+  - 🖱️ **Visual Editor**: Drag-and-drop entities and relationships
+  - 💻 **Code Editor**: Direct PlantUML/Mermaid editing
+- Bidirectional synchronization (all views stay in sync)
+- Live preview of changes
+
+### 🗄️ **Multi-Database Support**
+- PostgreSQL (primary)
+- MySQL
+- Oracle PL/SQL
+- SQL Server
+- Database-specific optimizations
+
+### ⚡ **Direct Database Deployment**
+- In-platform database creation
+- Secure connection management
+- SQL syntax validation before execution
+- Success verification and error handling
+
+### 📤 **Flexible Export Options**
+- SQL scripts (.sql)
+- PDF documentation with diagrams
+- High-resolution images (.png)
+- JSON metamodel (.json)
+- PlantUML/Mermaid source code
 
 ---
 
 ## 🏗️ System Architecture
 
+### **High-Level Architecture Diagram**
+
 ```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   User Input    │    │   LLM Analysis   │    │  UML Generation │
-│                 │────│                  │────│                 │
-│ Natural Language│    │ Requirements     │    │ ERD/Class       │
-│ Prompt          │    │ Extraction       │    │ Diagrams        │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-                                                        │
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│  SQL Scripts    │    │  Engine-Specific │    │ UML Validation  │
-│                 │────│                  │────│                 │
-│ Multi-Database  │    │ Code Generation  │    │ & Manual Edit   │
-│ Support         │    │                  │    │                 │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          PRESENTATION LAYER                              │
+│                     (React + TypeScript + MUI)                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌─────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐ │
+│  │   Prompt    │  │   Diagram    │  │     SQL      │  │  Database   │ │
+│  │   Input     │  │   Editor     │  │   Viewer     │  │  Connection │ │
+│  │  Interface  │  │  (Joint.js)  │  │   (Monaco)   │  │    Form     │ │
+│  └─────────────┘  └──────────────┘  └──────────────┘  └─────────────┘ │
+│                                                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │              Export Manager (SQL/PDF/PNG/JSON)                  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    ↕️
+                            REST API (HTTP/JSON)
+                                    ↕️
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        BUSINESS LOGIC LAYER                              │
+│                        (Python + FastAPI)                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐     │
+│  │  Prompt          │  │  Diagram         │  │  SQL             │     │
+│  │  Validation      │→ │  Generation      │→ │  Generation      │     │
+│  │  Engine          │  │  Service         │  │  Templates       │     │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘     │
+│                                                                          │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐     │
+│  │  Synchronization │  │  SQL Syntax      │  │  Database        │     │
+│  │  Engine          │  │  Validator       │  │  Executor        │     │
+│  │  (Real-time)     │  │  (sqlparse)      │  │  (SQLAlchemy)    │     │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘     │
+│                                                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │              Export Service (Multi-format Generator)             │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    ↕️
+┌─────────────────────────────────────────────────────────────────────────┐
+│                            AI/ML LAYER                                   │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │                   LLM Service (Ollama)                           │  │
+│  │                                                                  │  │
+│  │  ┌────────────────┐  ┌────────────────┐  ┌──────────────────┐  │  │
+│  │  │  Llama 3.1     │  │  Prompt        │  │  Entity          │  │  │
+│  │  │  (70B/8B)      │  │  Engineering   │  │  Extraction      │  │  │
+│  │  │  Inference     │  │  Templates     │  │  Module          │  │  │
+│  │  └────────────────┘  └────────────────┘  └──────────────────┘  │  │
+│  │                                                                  │  │
+│  │  ┌──────────────────────────────────────────────────────────┐  │  │
+│  │  │         Domain Knowledge Base (Dynamic Learning)         │  │  │
+│  │  └──────────────────────────────────────────────────────────┘  │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    ↕️
+┌─────────────────────────────────────────────────────────────────────────┐
+│                       DATA/STORAGE LAYER                                 │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌─────────────────┐  ┌──────────────────────────────────────────────┐ │
+│  │  SQLite         │  │  User Database Instances                     │ │
+│  │  (Sessions)     │  │  (PostgreSQL/MySQL/Oracle/SQL Server)        │ │
+│  └─────────────────┘  └──────────────────────────────────────────────┘ │
+│                                                                          │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │         File System (Exports: SQL/PDF/PNG/JSON/PlantUML)        │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
-## Pipeline :
-<img width="800" height="300" alt="image" src="https://github.com/user-attachments/assets/936207a5-6f86-497f-a113-1b23980007a9" />
 
-## 🔧 Technology Stack
+## 🔄 Complete Workflow
 
-### **Frontend**
-- **Framework**: React.js with TypeScript
-- **UML Editor**: Joint.js or Fabric.js for interactive diagrams
-- **UI Components**: Material-UI or Ant Design
-- **State Management**: Redux Toolkit or Zustand
-
-### **Backend**
-- **Runtime**: Node.js with Express.js or Python with FastAPI
-- **LLM Integration**: 
-  - OpenAI GPT-4 API
-  - Anthropic Claude API
-  - Local models via Ollama (optional)
-- **Database**: PostgreSQL for application data storage
-- **Template Engine**: Handlebars.js or Jinja2 for SQL generation
-
-### **Model-Driven Engineering**
-- **Transformation Engine**: Custom MDE framework
-- **Meta-Models**: UML metamodel definitions
-- **Code Generation**: Template-based approach with dialect mapping
-
-### **DevOps & Deployment**
-- **Containerization**: Docker & Docker Compose
-- **Cloud Platform**: AWS/Azure/GCP
-- **CI/CD**: GitHub Actions or GitLab CI
-- **Monitoring**: Prometheus + Grafana
-
----
-## 🎥 Video Demo
-
-[![SchemaForge AI Demo](https://ik.imagekit.io/qpnugvpbj/17.09.2025_14.54.04_REC.mp4?updatedAt=1758117446868
-)](https://imagekit.io/player/embed/qpnugvpbj/17.09.2025_14.54.04_REC.mp4?updatedAt=1758117446868&thumbnail=https%3A%2F%2Fik.imagekit.io%2Fqpnugvpbj%2F17.09.2025_14.54.04_REC.mp4%2Fik-thumbnail.jpg%3FupdatedAt%3D1758117446868&updatedAt=1758117446868)
-
-### 📹 Demo Highlights
-- **Natural Language to SQL**: See how prompts transform into complete schemas
-- **Interactive UML Editor**: Watch real-time diagram generation and editing
-- **Multi-Database Support**: Demonstration across PostgreSQL, MySQL, and Oracle
-- **End-to-End Workflow**: Complete process from idea to production-ready SQL
-
-*Demo Duration: ~5 minutes | Updated: September 2025*
-
----
-
-## 🚀 Core Features
-
-### Phase 1: MVP (Months 1-2)
-- [ ] Natural language prompt processing
-- [ ] Basic UML ERD generation
-- [ ] Single database support (PostgreSQL)
-- [ ] Simple web interface
-
-### Phase 2: Enhanced UML (Months 3-4)
-- [ ] Interactive UML editor
-- [ ] Manual diagram editing capabilities
-- [ ] UML validation and error checking
-- [ ] Export/Import UML diagrams
-
-### Phase 3: Multi-Database (Months 5-6)
-- [ ] MySQL support
-- [ ] Oracle support
-- [ ] SQL Server support
-- [ ] Database-specific optimizations
-
-### Phase 4: Advanced Features (Months 7-8)
-- [ ] Hand-drawn diagram recognition (Computer Vision)
-- [ ] Reverse engineering (DB → UML)
-- [ ] Performance optimization suggestions
-- [ ] Team collaboration features
-
----
-
-## 📊 System Workflow
+### **Phase 1: Intelligent Prompt Validation**
 
 ```mermaid
 graph TD
-    A[User Prompt] --> B[LLM Processing]
-    B --> C[UML Generation]
-    C --> D{UML Valid?}
-    D -->|No| E[Manual Editing]
-    E --> C
-    D -->|Yes| F[Database Selection]
-    F --> G[SQL Generation]
-    G --> H[Script Output]
+    A[User Enters Prompt] --> B{LLM Domain Analysis}
+    B --> C[Extract Universal Structure]
+    C --> D[Entities/Actors]
+    C --> E[Attributes]
+    C --> F[Relationships]
+    C --> G[Cardinality]
+    C --> H[Constraints]
     
-    I[Hand-drawn UML] --> J[AI Recognition]
-    J --> C
+    D --> I{Validation Check}
+    E --> I
+    F --> I
+    G --> I
+    H --> I
+    
+    I -->|Complete| J[✅ Proceed to Generation]
+    I -->|Incomplete| K[AI Suggests Missing Elements]
+    K --> L{User Response}
+    L -->|Accept| M[Auto-complete with AI]
+    L -->|Modify| N[User Provides More Details]
+    L -->|Manual| O[User Completes Manually]
+    
+    M --> I
+    N --> I
+    O --> I
+```
+
+**Example Flow:**
+
+```
+USER INPUT:
+"I want a recruitment system with students and enterprises"
+
+↓
+
+LLM ANALYSIS:
+{
+  "domain": "recruitment system",
+  "detected_entities": ["Student", "Enterprise"],
+  "inferred_entities": ["JobOffer", "Application"],
+  "missing_info": ["attributes", "relationships"]
+}
+
+↓
+
+AI SUGGESTION:
+"I detected a recruitment system. Should I add:
+ ✓ JobOffer entity (with title, deadline, description)
+ ✓ Application entity (linking Students to JobOffers)
+ ✓ Typical attributes (name, email, etc.)
+ 
+ Accept all suggestions? [Yes] [No] [Customize]"
+
+↓
+
+USER ACCEPTS → COMPLETE PROMPT READY ✅
 ```
 
 ---
 
-## 💡 Example Usage
+### **Phase 2: Diagram Generation & Rendering**
 
-### Input Prompt:
+```mermaid
+graph LR
+    A[Validated Prompt] --> B[UML Metamodel]
+    B --> C[Entity Objects]
+    B --> D[Relationship Objects]
+    B --> E[Attribute Objects]
+    
+    C --> F[Code Generators]
+    D --> F
+    E --> F
+    
+    F --> G[PlantUML Syntax]
+    F --> H[Mermaid Syntax]
+    
+    G --> I[PlantUML Server]
+    H --> J[Mermaid.js Renderer]
+    
+    I --> K[Visual Diagram Display]
+    J --> K
 ```
-"I need a database for an e-commerce system with users, products, orders, 
-and categories. Users can have multiple orders, products belong to categories, 
-and orders contain multiple products with quantities."
+
+**Metamodel Structure:**
+
+```python
+# Internal representation (not shown to user)
+Entity(
+    name="Student",
+    attributes=[
+        Attribute(name="id", type="INTEGER", primary_key=True),
+        Attribute(name="name", type="VARCHAR", length=255, not_null=True),
+        Attribute(name="email", type="VARCHAR", length=255, unique=True)
+    ],
+    relationships=[
+        Relationship(
+            target="Application",
+            type="ONE_TO_MANY",
+            foreign_key="student_id"
+        )
+    ]
+)
 ```
 
-### Generated UML Elements:
-- **Entities**: User, Product, Order, Category, OrderItem
-- **Relationships**: User(1) → Order(N), Category(1) → Product(N), Order(N) → Product(M)
-- **Attributes**: Auto-generated with appropriate data types
+**Generated PlantUML:**
 
-### Output SQL (PostgreSQL):
+```plantuml
+@startuml
+class Student {
+  +id: INTEGER <<PK>>
+  +name: VARCHAR(255)
+  +email: VARCHAR(255) <<UNIQUE>>
+}
+
+class Enterprise {
+  +id: INTEGER <<PK>>
+  +name: VARCHAR(255)
+  +sector: VARCHAR(100)
+}
+
+class JobOffer {
+  +id: INTEGER <<PK>>
+  +enterprise_id: INTEGER <<FK>>
+  +title: VARCHAR(255)
+  +deadline: DATE
+}
+
+class Application {
+  +id: INTEGER <<PK>>
+  +student_id: INTEGER <<FK>>
+  +job_offer_id: INTEGER <<FK>>
+  +status: VARCHAR(50)
+  +applied_at: TIMESTAMP
+}
+
+Student "1" -- "*" Application
+Enterprise "1" -- "*" JobOffer
+Application "*" -- "1" JobOffer
+@enduml
+```
+
+**Generated Mermaid:**
+
+```mermaid
+classDiagram
+    class Student {
+        +INTEGER id
+        +VARCHAR name
+        +VARCHAR email
+    }
+    class Enterprise {
+        +INTEGER id
+        +VARCHAR name
+        +VARCHAR sector
+    }
+    class JobOffer {
+        +INTEGER id
+        +INTEGER enterprise_id
+        +VARCHAR title
+        +DATE deadline
+    }
+    class Application {
+        +INTEGER id
+        +INTEGER student_id
+        +INTEGER job_offer_id
+        +VARCHAR status
+        +TIMESTAMP applied_at
+    }
+    
+    Student "1" --> "*" Application : applies
+    Enterprise "1" --> "*" JobOffer : posts
+    Application "*" --> "1" JobOffer : for
+```
+
+---
+
+### **Phase 3: Real-Time Synchronization System**
+
+```mermaid
+graph TD
+    subgraph "User Interactions"
+        A[Visual Edit<br/>Drag & Drop]
+        B[Code Edit<br/>PlantUML/Mermaid]
+        C[AI Edit<br/>Prompt Command]
+    end
+    
+    subgraph "Synchronization Engine"
+        D[Event Listener]
+        E[Metamodel Manager]
+        F[Change Detector]
+        G[Debouncer<br/>500ms delay]
+    end
+    
+    subgraph "Update Propagation"
+        H[Visual Renderer]
+        I[Code Generator]
+        J[Validation Engine]
+    end
+    
+    A --> D
+    B --> D
+    C --> D
+    
+    D --> E
+    E --> F
+    F --> G
+    
+    G --> H
+    G --> I
+    G --> J
+    
+    H -.->|Updates| A
+    I -.->|Updates| B
+    J -.->|Validates| E
+    
+    style E fill:#4CAF50
+    style G fill:#FFC107
+```
+
+**Synchronization Flow Example:**
+
+```
+USER ACTION: Drag "Student" entity to new position
+    ↓
+Joint.js emits: "cell:position:change" event
+    ↓
+Event Listener captures: {entityId: "Student", x: 250, y: 100}
+    ↓
+Metamodel updates: Student.position = {x: 250, y: 100}
+    ↓
+Debouncer waits 500ms (no more changes)
+    ↓
+Code Generator regenerates PlantUML/Mermaid
+    ↓
+Monaco Editor updates with new code
+    ↓
+✅ All views synchronized
+```
+
+---
+
+### **Phase 4: SQL Generation with Validation**
+
+```mermaid
+flowchart TD
+    A[Final Diagram] --> B{Select DBMS}
+    B -->|PostgreSQL| C1[PostgreSQL Template]
+    B -->|MySQL| C2[MySQL Template]
+    B -->|Oracle| C3[Oracle Template]
+    B -->|SQL Server| C4[SQL Server Template]
+    
+    C1 --> D[Apply Metamodel Data]
+    C2 --> D
+    C3 --> D
+    C4 --> D
+    
+    D --> E[Generate SQL Script]
+    E --> F[SQL Syntax Validator]
+    
+    F --> G{Valid?}
+    G -->|Yes| H[✅ Display SQL]
+    G -->|No| I[❌ Show Errors]
+    
+    I --> J[Auto-correction Suggestions]
+    J --> K{User Action}
+    K -->|Fix Manually| E
+    K -->|Accept Suggestions| D
+    
+    H --> L{User Choice}
+    L -->|Download| M[Generate .sql File]
+    L -->|Execute| N[Database Creation]
+```
+
+**SQL Generation Example:**
+
+**For PostgreSQL:**
 ```sql
-CREATE TABLE users (
+-- Generated for PostgreSQL 14+
+
+CREATE TABLE student (
     id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE categories (
+CREATE TABLE enterprise (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    sector VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
--- ... additional tables
+
+CREATE TABLE job_offer (
+    id SERIAL PRIMARY KEY,
+    enterprise_id INTEGER NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    deadline DATE,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (enterprise_id) REFERENCES enterprise(id) ON DELETE CASCADE
+);
+
+CREATE TABLE application (
+    id SERIAL PRIMARY KEY,
+    student_id INTEGER NOT NULL,
+    job_offer_id INTEGER NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending',
+    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE,
+    FOREIGN KEY (job_offer_id) REFERENCES job_offer(id) ON DELETE CASCADE,
+    UNIQUE (student_id, job_offer_id)
+);
+
+CREATE INDEX idx_job_offer_enterprise ON job_offer(enterprise_id);
+CREATE INDEX idx_application_student ON application(student_id);
+CREATE INDEX idx_application_job_offer ON application(job_offer_id);
+```
+
+**Same Schema for MySQL:**
+```sql
+-- Generated for MySQL 8.0+
+
+CREATE TABLE student (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE enterprise (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    sector VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ... rest with MySQL-specific syntax
 ```
 
 ---
 
-## 🔍 Model-Driven Engineering Benefits
+### **Phase 5: Database Creation & Export**
 
-| Traditional Approach | MDE Approach |
-|---------------------|--------------|
-| Manual schema design | Automated generation |
-| Error-prone process | Validation at model level |
-| Platform-specific code | Platform-independent models |
-| Hard to maintain | Easy model updates |
-| Limited reusability | High reusability |
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Backend
+    participant Validator
+    participant Database
+    participant FileSystem
+    
+    User->>Frontend: Choose Action
+    
+    alt Download SQL
+        Frontend->>Backend: Request SQL file
+        Backend->>FileSystem: Generate .sql
+        FileSystem-->>Frontend: Download link
+        Frontend-->>User: File downloaded
+    
+    else Create Database
+        User->>Frontend: Enter DB credentials
+        Frontend->>Backend: Connection config
+        Backend->>Validator: Test connection
+        Validator->>Database: SELECT 1
+        Database-->>Validator: Connection OK
+        Validator-->>Backend: ✅ Valid
+        Backend->>Database: Execute SQL script
+        Database-->>Backend: Tables created
+        Backend->>Database: Verify tables exist
+        Database-->>Backend: Table list
+        Backend-->>Frontend: Success message
+        Frontend-->>User: "Database created: student, enterprise, job_offer, application"
+    
+    else Export Diagram
+        Frontend->>Backend: Request export (PDF/PNG/JSON)
+        Backend->>FileSystem: Generate file
+        FileSystem-->>Frontend: Download link
+        Frontend-->>User: File downloaded
+    end
+```
+
+**Database Connection Form:**
+
+```
+┌────────────────────────────────────────────────────┐
+│          Create Database Directly                  │
+├────────────────────────────────────────────────────┤
+│                                                    │
+│  Database Type:  [PostgreSQL ▼]                   │
+│                                                    │
+│  Host:          [localhost            ]           │
+│  Port:          [5432                 ]           │
+│  Username:      [postgres             ]           │
+│  Password:      [••••••••••           ]           │
+│  Database Name: [recruitment_db       ]           │
+│                                                    │
+│  [Test Connection]  [Create Database]             │
+│                                                    │
+└────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 🎨 UML Diagram Types Supported
+## 🛠️ Technology Stack
 
-### 1. Entity-Relationship Diagrams (ERD)
-- Primary focus for database design
-- Entity relationships and cardinalities
-- Attribute definitions and constraints
+### **Frontend Technologies**
 
-### 2. UML Class Diagrams
-- Object-oriented approach to database design
-- Class relationships and inheritance
-- Database stereotypes support
+```
+┌─────────────────────────────────────────────────────────┐
+│                    FRONTEND STACK                       │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  React 18              → UI Framework                   │
+│  TypeScript            → Type Safety                    │
+│  Material-UI (MUI)     → Component Library             │
+│  Joint.js              → Interactive Diagram Editor     │
+│  Mermaid.js            → Diagram Rendering             │
+│  Monaco Editor         → Code Editor (VS Code engine)   │
+│  Axios                 → HTTP Client                    │
+│  React Query           → State Management & Caching     │
+│  React Router          → Navigation                     │
+│  React Dropzone        → File Upload                    │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
 
-### 3. Database Schema Diagrams
-- Table-centric view
-- Foreign key relationships
-- Index and constraint visualization
+### **Backend Technologies**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    BACKEND STACK                        │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  Python 3.11           → Core Language                  │
+│  FastAPI               → Web Framework                  │
+│  Pydantic              → Data Validation                │
+│  SQLAlchemy            → Database ORM                   │
+│  Ollama                → Local LLM Inference            │
+│  Jinja2                → Template Engine                │
+│  sqlparse              → SQL Parser & Validator         │
+│  psycopg2              → PostgreSQL Driver              │
+│  PyMySQL               → MySQL Driver                   │
+│  cx_Oracle             → Oracle Driver                  │
+│  ReportLab             → PDF Generation                 │
+│  Pillow                → Image Processing               │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+### **AI/ML Stack**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     AI/ML STACK                         │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  Ollama                → LLM Deployment Platform        │
+│  Llama 3.1 (70B)       → Primary LLM (Complex tasks)   │
+│  Llama 3.1 (8B)        → Secondary LLM (Fast tasks)    │
+│  LangChain             → LLM Orchestration (Optional)   │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+### **DevOps & Infrastructure**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                  DEVOPS & DEPLOYMENT                    │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  Docker                → Containerization               │
+│  Docker Compose        → Multi-container Orchestration  │
+│  Nginx                 → Reverse Proxy                  │
+│  Git                   → Version Control                │
+│  GitHub Actions        → CI/CD Pipeline                 │
+│  pytest                → Python Testing                 │
+│  Jest + RTL            → React Testing                  │
+│  Playwright            → E2E Testing                    │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 🗃️ Database Engine Support
+## 🧠 LLM Selection & Reasoning
 
-| Database | Status | Key Features |
-|----------|--------|--------------|
-| PostgreSQL | ✅ Primary | Advanced data types, JSON support |
-| MySQL | 🔄 Planned | MyISAM/InnoDB engines |
-| Oracle | 🔄 Planned | Enterprise features, PL/SQL |
-| SQL Server | 🔄 Planned | T-SQL specific features |
-| SQLite | 🔄 Future | Lightweight applications |
+### **Chosen LLM: Llama 3.1 (70B) via Ollama**
+
+```
+┌──────────────────────────────────────────────────────────┐
+│              WHY LLAMA 3.1 OVER ALTERNATIVES?            │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  ✅ FREE & OPEN SOURCE                                   │
+│     • No API costs (critical for academic projects)     │
+│     • No usage limits or rate limiting                  │
+│     • Full control over deployment                      │
+│                                                          │
+│  ✅ LOCAL DEPLOYMENT                                     │
+│     • No internet dependency                            │
+│     • Data privacy (no external API calls)              │
+│     • Low latency (< 2 seconds for most queries)        │
+│                                                          │
+│  ✅ LARGE CONTEXT WINDOW (128K tokens)                   │
+│     • Handle complex database schemas                   │
+│     • Process long user prompts                         │
+│     • Maintain conversation history                     │
+│                                                          │
+│  ✅ STRONG STRUCTURED OUTPUT                             │
+│     • Excellent JSON generation                         │
+│     • Consistent formatting                             │
+│     • Few hallucinations with proper prompting          │
+│                                                          │
+│  ✅ ACADEMIC-FRIENDLY LICENSE                            │
+│     • No commercial restrictions                        │
+│     • Can modify and distribute                         │
+│     • Suitable for research papers                      │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+```
+
+### **Comparison with Alternatives**
+
+| Feature | Llama 3.1 | GPT-4 | Claude 3.5 | Mistral 7B |
+|---------|-----------|-------|------------|------------|
+| **Cost** | ✅ Free | ❌ $0.03/1K | ❌ $0.015/1K | ✅ Free |
+| **Local Deploy** | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
+| **Context** | ✅ 128K | ✅ 128K | ✅ 200K | ⚠️ 32K |
+| **Reasoning** | ✅ Excellent | ✅ Excellent | ✅ Excellent | ⚠️ Good |
+| **JSON Output** | ✅ Reliable | ✅ Reliable | ✅ Reliable | ⚠️ Sometimes |
+| **Speed** | ⚠️ Medium | ✅ Fast | ✅ Fast | ✅ Very Fast |
+| **Size** | ⚠️ 40GB | N/A | N/A | ✅ 4GB |
+
+### **Deployment Strategy**
+
+```
+PRIMARY MODEL: Llama 3.1 70B (4-bit quantized)
+├─→ Use for: Prompt validation, domain analysis, entity extraction
+├─→ RAM Required: ~40GB
+└─→ Response Time: 2-5 seconds
+
+FALLBACK MODEL: Llama 3.1 8B (full precision)
+├─→ Use for: Quick modifications, simple queries
+├─→ RAM Required: ~16GB
+└─→ Response Time: <1 second
+
+DEPLOYMENT METHOD: Ollama
+├─→ Simple CLI: `ollama run llama3.1:70b`
+├─→ REST API: http://localhost:11434
+└─→ Model switching: Dynamic based on task complexity
+```
+
+---
+
+## 📦 Installation
+
+### **Prerequisites**
+
+```bash
+# System Requirements
+- RAM: 48GB+ (for Llama 3.1 70B) or 16GB+ (for 8B version)
+- GPU: Optional but recommended (NVIDIA with CUDA)
+- OS: Linux (Ubuntu 22.04+), macOS, or Windows with WSL2
+
+# Software Requirements
+- Python 3.11+
+- Node.js 18+
+- Docker & Docker Compose
+- Git
+```
+
+### **Step 1: Clone Repository**
+
+```bash
+git clone https://github.com/your-org/nl2sql-generator.git
+cd nl2sql-generator
+```
+
+### **Step 2: Install Ollama & Download Model**
+
+```bash
+# Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Download Llama 3.1 (70B - recommended for production)
+ollama pull llama3.1:70b
+
+# OR download 8B version (faster, less accurate)
+ollama pull llama3.1:8b
+
+# Verify installation
+ollama list
+```
+
+### **Step 3: Backend Setup**
+
+```bash
+cd backend
+
+# Create virtual environment
+python3.11 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set environment variables
+cp .env.example .env
+# Edit .env with your configurations
+
+# Run backend
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### **Step 4: Frontend Setup**
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Set environment variables
+cp .env.example .env
+# Edit .env with backend API URL
+
+# Run frontend
+npm run dev
+```
+
+### **Step 5: Docker Deployment (Recommended)**
+
+```bash
+# Build and run all services
+docker-compose up --build
+
+# Services will be available at:
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8000
+# API Docs: http://localhost:8000/docs
+```
+
+---
+
+## 📖 Usage Guide
+
+### **1. Enter Natural Language Prompt**
+
+```
+Navigate to: http://localhost:3000
+
+Enter in prompt box:
+"I want to create a recruitment system where students can apply to 
+job offers posted by enterprises. Teachers supervise students."
+
+Click: [Generate Schema]
+```
+
+### **2. Review AI Suggestions**
+
+```
+AI Response:
+"I detected a recruitment system. I recommend adding:
+ ✓ JobOffer entity (title, description, deadline, salary)
+ ✓ Application entity (status, applied_at, cover_letter)
+ ✓ Supervisor entity (name, email, department)
+ ✓ Relationships: Student → Application → JobOffer
+                  Teacher supervises Student
+                  Enterprise posts JobOffer
+
+Accept all? [Yes] [Customize]"
+
+Click: [Yes, Accept All]
+```
+
+### **3. View & Edit Diagram**
+
+```
+Diagram displays in 3 panels:
+
+┌─────────────────┬─────────────────┬─────────────────┐
+│  Visual Editor  │  PlantUML Code  │  Mermaid Code   │
+│   (Joint.js)    │   (Monaco)      │   (Monaco)      │
+├─────────────────┼─────────────────┼─────────────────┤
+│                 │                 │                 │
+│  [Student]      │  @startuml      │  classDiagram   │
+│     ↓           │  class Student  │  class Student  │
+│  [Application]  │  ...            │  ...            │
+│     ↓           │  @enduml        │                 │
+│  [JobOffer]     │                 │                 │
+│                 │                 │                 │
+└─────────────────┴─────────────────┴─────────────────┘
+
+Actions:
+• Drag entities to reposition
+• Double-click entity to edit attributes
+• Right-click to add/remove relationships
+• Edit code directly (syncs with visual)
+• Use AI: "Add a 'status' field to Application"
+```
+
+### **4. Validate & Generate SQL**
+
+```
+Click: [Validate Diagram]
+
+Validation Results:
+✅ All entities have primary keys
+✅ All relationships defined correctly
+✅ No orphan entities
+✅ Foreign keys properly set
+
+Select DBMS: [PostgreSQL ▼]
+
+Click: [Generate SQL]
+
+SQL appears in viewer:
+CREATE TABLE student ( ... );
+CREATE TABLE enterprise ( ... );
+...
+
+Actions:
+• [Copy SQL] - Copy to clipboard
+• [Download SQL] - Get .sql file
+• [Create Database] - Deploy directly
+```
+
+### **5. Create Database or Export**
+
+**Option A: Direct Database Creation**
+
+```
+Click: [Create Database]
+
+Fill form:
+┌────────────────────────────────────┐
+│ DBMS Type:    PostgreSQL           │
+│ Host:         localhost             │
+│ Port:         5432                  │
+│ Username:     postgres              │
+│ Password:     ••••••••              │
+│ Database:     recruitment_db        │
+└────────────────────────────────────┘
+
+Click: [Test Connection] → ✅ Connection OK
+Click: [Execute SQL]
+
+Result:
+"✅ Database 'recruitment_db' created successfully!
+Created tables: student, enterprise, job_offer, application, teacher"
+```
+
+**Option B: Export Files**
+
+```
+Click: [Export ▼]
+
+Options:
+• SQL Script (.sql) - Database creation script
+• PDF Document (.pdf) - Diagram + documentation
+• PNG Image (.png) - High-resolution diagram
+• JSON Metamodel (.json) - Machine-readable structure
+• PlantUML Source (.puml) - Editable diagram code
+• Mermaid Source (.mmd) - Markdown-compatible code
+
+Select format → Download
+```
 
 ---
 
 ## 📁 Project Structure
 
 ```
-schemaforge-ai/
-├── frontend/                 # React application
-│   ├── src/components/      # UI components
-│   ├── src/services/        # API services
-│   └── src/store/           # State management
-├── backend/                 # API server
-│   ├── src/controllers/     # Request handlers
-│   ├── src/services/        # Business logic
-│   ├── src/models/          # Data models
-│   └── src/templates/       # SQL templates
-├── mde-engine/              # Model transformation
-│   ├── metamodels/          # UML definitions
-│   ├── transformations/     # M2M, M2T rules
-│   └── generators/          # Code generators
-├── docs/                    # Documentation
-└── docker/                 # Containerization
+nl2sql-generator/
+├── frontend/                          # React application
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── components/                # UI components
+│   │   │   ├── PromptInput.tsx        # Natural language input
+│   │   │   ├── DiagramEditor.tsx      # Joint.js visual editor
+│   │   │   ├── CodeEditor.tsx         # Monaco code editor
+│   │   │   ├── SQLViewer.tsx          # SQL display & download
+│   │   │   ├── ConnectionForm.tsx     # Database connection UI
+│   │   │   ├── ExportManager.tsx      # Multi-format export
+│   │   │   └── ValidationPanel.tsx    # Diagram validation display
+│   │   ├── services/                  # API communication
+│   │   │   ├── api.ts                 # Axios configuration
+│   │   │   ├── llmService.ts          # LLM API calls
+│   │   │   ├── diagramService.ts      # Diagram operations
+│   │   │   └── sqlService.ts          # SQL generation
+│   │   ├── hooks/                     # Custom React hooks
+│   │   │   ├── useDiagram.ts          # Diagram state management
+│   │   │   ├── useSync.ts             # Synchronization logic
+│   │   │   └── useValidation.ts       # Validation hooks
+│   │   ├── types/                     # TypeScript types
+│   │   │   ├── metamodel.ts           # UML metamodel types
+│   │   │   ├── diagram.ts             # Diagram types
+│   │   │   └── api.ts                 # API response types
+│   │   ├── utils/                     # Utility functions
+│   │   │   ├── parser.ts              # Code parsers
+│   │   │   ├── validators.ts          # Client-side validation
+│   │   │   └── formatters.ts          # Data formatters
+│   │   ├── App.tsx                    # Main application
+│   │   └── index.tsx                  # Entry point
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── backend/                           # Python FastAPI application
+│   ├── main.py                        # FastAPI app entry point
+│   ├── routers/                       # API endpoints
+│   │   ├── prompt_router.py           # Prompt validation endpoints
+│   │   ├── diagram_router.py          # Diagram generation endpoints
+│   │   ├── sql_router.py              # SQL generation endpoints
+│   │   ├── database_router.py         # Database execution endpoints
+│   │   └── export_router.py           # Export endpoints
+│   ├── services/                      # Business logic
+│   │   ├── llm_service.py             # Ollama/LLM integration
+│   │   ├── prompt_validator.py        # Prompt validation logic
+│   │   ├── entity_extractor.py        # Entity extraction
+│   │   ├── uml_generator.py           # UML metamodel generation
+│   │   ├── plantuml_service.py        # PlantUML code generation
+│   │   ├── mermaid_service.py         # Mermaid code generation
+│   │   ├── sync_engine.py             # Real-time sync logic
+│   │   ├── sql_generator.py           # SQL generation from metamodel
+│   │   ├── sql_validator.py           # SQL syntax validation
+│   │   ├── db_executor.py             # Database connection & execution
+│   │   └── export_service.py          # Multi-format export
+│   ├── models/                        # Data models
+│   │   ├── metamodel.py               # UML metamodel classes
+│   │   ├── entity.py                  # Entity model
+│   │   ├── relationship.py            # Relationship model
+│   │   ├── attribute.py               # Attribute model
+│   │   └── schemas.py                 # Pydantic schemas
+│   ├── templates/                     # SQL templates
+│   │   ├── postgresql.sql.j2          # PostgreSQL template
+│   │   ├── mysql.sql.j2               # MySQL template
+│   │   ├── oracle.sql.j2              # Oracle template
+│   │   └── sqlserver.sql.j2           # SQL Server template
+│   ├── prompts/                       # LLM prompt templates
+│   │   ├── validation_prompt.txt      # Prompt validation template
+│   │   ├── extraction_prompt.txt      # Entity extraction template
+│   │   ├── completion_prompt.txt      # Prompt completion template
+│   │   └── modification_prompt.txt    # Diagram modification template
+│   ├── utils/                         # Utility functions
+│   │   ├── parser.py                  # Code parsers
+│   │   ├── validators.py              # Validation utilities
+│   │   └── formatters.py              # Data formatters
+│   ├── config.py                      # Configuration
+│   ├── requirements.txt               # Python dependencies
+│   └── .env.example                   # Environment variables template
+│
+├── docs/                              # Documentation
+│   ├── API.md                         # API documentation
+│   ├── USER_GUIDE.md                  # User manual
+│   ├── DEVELOPER_GUIDE.md             # Developer documentation
+│   ├── ARCHITECTURE.md                # System architecture
+│   └── DEPLOYMENT.md                  # Deployment guide
+│
+├── docker/                            # Docker configuration
+│   ├── Dockerfile.frontend            # Frontend container
+│   ├── Dockerfile.backend             # Backend container
+│   ├── docker-compose.yml             # Multi-container setup
+│   └── nginx.conf                     # Nginx configuration
+│
+├── tests/                             # Test suites
+│   ├── frontend/                      # Frontend tests
+│   │   ├── unit/                      # Jest unit tests
+│   │   └── e2e/                       # Playwright E2E tests
+│   ├── backend/                       # Backend tests
+│   │   ├── unit/                      # pytest unit tests
+│   │   ├── integration/               # Integration tests
+│   │   └── fixtures/                  # Test data
+│   └── test_data/                     # Sample prompts & schemas
+│
+├── .github/                           # GitHub configuration
+│   └── workflows/                     # CI/CD pipelines
+│       ├── test.yml                   # Automated testing
+│       └── deploy.yml                 # Deployment workflow
+│
+├── README.md                          # This file
+├── LICENSE                            # MIT License
+├── .gitignore                         # Git ignore rules
+└── CONTRIBUTING.md                    # Contribution guidelines
 ```
 
 ---
 
-## 🚀 Getting Started
+## 📅 Development Roadmap
 
-### Prerequisites
-- Node.js 18+ or Python 3.9+
-- PostgreSQL 14+
-- OpenAI API key
-- Git
+### **Phase 1: Foundation (Weeks 1-8) ✅**
 
-### Quick Start
+```
+┌────────────────────────────────────────────────────────┐
+│  Week 1-2: Environment & LLM Setup                     │
+├────────────────────────────────────────────────────────┤
+│  ✓ Install Ollama + Llama 3.1                         │
+│  ✓ Setup Python virtual environment                   │
+│  ✓ Initialize FastAPI project                         │
+│  ✓ Initialize React + TypeScript project              │
+│  ✓ Configure Docker Compose                           │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 3-4: LLM Integration                             │
+├────────────────────────────────────────────────────────┤
+│  ✓ Design prompt templates                            │
+│  ✓ Build LLM service wrapper                          │
+│  ✓ Implement entity extraction                        │
+│  ✓ Create prompt validation logic                     │
+│  ✓ Test with multiple domains                         │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 5-6: UML Generation                              │
+├────────────────────────────────────────────────────────┤
+│  ✓ Define UML metamodel classes                       │
+│  ✓ Build PlantUML code generator                      │
+│  ✓ Build Mermaid code generator                       │
+│  ✓ Integrate PlantUML server                          │
+│  ✓ Create diagram viewer component                    │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 7-8: Basic SQL Generation                        │
+├────────────────────────────────────────────────────────┤
+│  ✓ Create PostgreSQL templates                        │
+│  ✓ Build SQL generator from metamodel                 │
+│  ✓ Implement basic validator                          │
+│  ✓ Create SQL viewer component                        │
+│  ✓ Add download functionality                         │
+└────────────────────────────────────────────────────────┘
+
+Milestone 1: Prompt → Diagram → SQL Download ✅
+```
+
+### **Phase 2: Interactive Editing (Weeks 9-16) 🔄**
+
+```
+┌────────────────────────────────────────────────────────┐
+│  Week 9-10: Visual Editor                              │
+├────────────────────────────────────────────────────────┤
+│  □ Integrate Joint.js library                         │
+│  □ Map metamodel to Joint.js shapes                   │
+│  □ Implement drag-and-drop                            │
+│  □ Add entity creation/deletion                       │
+│  □ Add relationship drawing                           │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 11-12: Code Editor                               │
+├────────────────────────────────────────────────────────┤
+│  □ Integrate Monaco Editor                            │
+│  □ Add syntax highlighting                            │
+│  □ Implement code parsing                             │
+│  □ Test PlantUML/Mermaid parsers                      │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 13-14: Synchronization Engine                    │
+├────────────────────────────────────────────────────────┤
+│  □ Implement observer pattern                         │
+│  □ Add event listeners                                │
+│  □ Build debouncing logic                             │
+│  □ Handle circular update prevention                  │
+│  □ Test all sync scenarios                            │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 15-16: AI Modification                           │
+├────────────────────────────────────────────────────────┤
+│  □ Create modification prompts                        │
+│  □ Build incremental update logic                     │
+│  □ Add undo/redo stack                                │
+│  □ Test AI modifications                              │
+└────────────────────────────────────────────────────────┘
+
+Milestone 2: Full Interactive Editing ✅
+```
+
+### **Phase 3: Multi-Database (Weeks 17-24) 📊**
+
+```
+┌────────────────────────────────────────────────────────┐
+│  Week 17-18: Database Abstraction                      │
+├────────────────────────────────────────────────────────┤
+│  □ Create DBMS-agnostic metamodel                     │
+│  □ Build dialect mapping system                       │
+│  □ Add MySQL templates                                │
+│  □ Add Oracle templates                               │
+│  □ Add SQL Server templates                           │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 19-20: Enhanced Validation                       │
+├────────────────────────────────────────────────────────┤
+│  □ Implement deep syntax validation                   │
+│  □ Add DBMS-specific rules                            │
+│  □ Create error messages                              │
+│  □ Add auto-correction                                │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 21-22: Connection Manager                        │
+├────────────────────────────────────────────────────────┤
+│  □ Build connection form UI                           │
+│  □ Implement SQLAlchemy logic                         │
+│  □ Add connection testing                             │
+│  □ Build SQL executor                                 │
+│  □ Add error handling                                 │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 23-24: Direct Database Creation                  │
+├────────────────────────────────────────────────────────┤
+│  □ Test PostgreSQL execution                          │
+│  □ Test MySQL execution                               │
+│  □ Add verification queries                           │
+│  □ Create feedback UI                                 │
+│  □ Add credential encryption                          │
+└────────────────────────────────────────────────────────┘
+
+Milestone 3: Multi-DBMS + Direct Creation ✅
+```
+
+### **Phase 4: Export & Polish (Weeks 25-32) 🎨**
+
+```
+┌────────────────────────────────────────────────────────┐
+│  Week 25-26: Export System                             │
+├────────────────────────────────────────────────────────┤
+│  □ Implement SQL download                             │
+│  □ Add PDF export (ReportLab)                         │
+│  □ Add PNG export                                     │
+│  □ Add JSON export                                    │
+│  □ Add PlantUML/Mermaid export                        │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 27-28: UI/UX Polish                              │
+├────────────────────────────────────────────────────────┤
+│  □ Responsive design                                  │
+│  □ Loading states                                     │
+│  □ Error messages                                     │
+│  □ Tooltips & help                                    │
+│  □ User tutorial                                      │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 29-30: Testing                                   │
+├────────────────────────────────────────────────────────┤
+│  □ Unit tests (80% coverage)                          │
+│  □ Integration tests                                  │
+│  □ E2E tests (Playwright)                             │
+│  □ Load testing                                       │
+│  □ Bug fixes                                          │
+└────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────┐
+│  Week 31-32: Documentation & Deployment                │
+├────────────────────────────────────────────────────────┤
+│  □ API documentation                                  │
+│  □ User guide                                         │
+│  □ Developer docs                                     │
+│  □ Docker deployment                                  │
+│  □ Production deployment                              │
+└────────────────────────────────────────────────────────┘
+
+Milestone 4: Production-Ready System ✅
+```
+
+---
+
+## 🔌 API Documentation
+
+### **Base URL**: `http://localhost:8000/api/v1`
+
+### **Endpoints**
+
+#### **1. Prompt Validation**
+
+```http
+POST /prompt/validate
+Content-Type: application/json
+
+Request:
+{
+  "prompt": "I want a recruitment system with students and enterprises",
+  "domain_hint": null  // Optional: "recruitment", "e-commerce", etc.
+}
+
+Response:
+{
+  "is_complete": false,
+  "detected_domain": "recruitment system",
+  "detected_entities": ["Student", "Enterprise"],
+  "inferred_entities": ["JobOffer", "Application"],
+  "missing_info": [
+    "Entity attributes not specified",
+    "Relationships not defined"
+  ],
+  "suggestions": [
+    "Should students apply to job offers?",
+    "Should enterprises post job offers?",
+    "What attributes should Student have? (name, email, ...)"
+  ],
+  "confidence": 0.85
+}
+```
+
+#### **2. Diagram Generation**
+
+```http
+POST /diagram/generate
+Content-Type: application/json
+
+Request:
+{
+  "prompt": "Complete prompt after validation",
+  "format": "both",  // "plantuml" | "mermaid" | "both"
+  "style": "default"  // Diagram style preferences
+}
+
+Response:
+{
+  "metamodel": {
+    "entities": [...],
+    "relationships": [...]
+  },
+  "plantuml_code": "@startuml\nclass Student {...}\n@enduml",
+  "mermaid_code": "classDiagram\nclass Student {...}",
+  "diagram_image_base64": "iVBORw0KGgoAAAANS...",
+  "validation_status": "valid"
+}
+```
+
+#### **3. Diagram Modification**
+
+```http
+POST /diagram/modify
+Content-Type: application/json
+
+Request:
+{
+  "current_metamodel": {...},
+  "modification_prompt": "Add a Supervisor entity that manages students",
+  "format": "plantuml"
+}
+
+Response:
+{
+  "updated_metamodel": {...},
+  "updated_code": "...",
+  "changes": [
+    "Added entity: Supervisor",
+    "Added relationship: Teacher-manages-Student"
+  ]
+}
+```
+
+#### **4. SQL Generation**
+
+```http
+POST /sql/generate
+Content-Type: application/json
+
+Request:
+{
+  "metamodel": {...},
+  "dbms": "postgresql",  // "mysql" | "oracle" | "sqlserver"
+  "options": {
+    "add_indexes": true,
+    "add_constraints": true,
+    "include_comments": true
+  }
+}
+
+Response:
+{
+  "sql_script": "CREATE TABLE student (...);",
+  "validation": {
+    "is_valid": true,
+    "errors": [],
+    "warnings": ["Consider adding index on 'email' column"]
+  },
+  "statistics": {
+    "tables": 4,
+    "relationships": 5,
+    "lines_of_code": 120
+  }
+}
+```
+
+#### **5. Database Creation**
+
+```http
+POST /database/create
+Content-Type: application/json
+
+Request:
+{
+  "dbms": "postgresql",
+  "connection": {
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "secure_pass",
+    "database_name": "recruitment_db"
+  },
+  "sql_script": "CREATE TABLE ...",
+  "options": {
+    "create_if_not_exists": true,
+    "drop_if_exists": false
+  }
+}
+
+Response:
+{
+  "success": true,
+  "message": "Database created successfully",
+  "tables_created": ["student", "enterprise", "job_offer", "application"],
+  "execution_time_ms": 1250
+}
+```
+
+#### **6. Export**
+
+```http
+POST /export
+Content-Type: application/json
+
+Request:
+{
+  "metamodel": {...},
+  "format": "pdf",  // "sql" | "pdf" | "png" | "json" | "plantuml" | "mermaid"
+  "options": {
+    "include_documentation": true,
+    "image_resolution": "high"
+  }
+}
+
+Response:
+{
+  "file_url": "/downloads/diagram_20250118_153045.pdf",
+  "file_size_bytes": 245678,
+  "format": "pdf"
+}
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these guidelines:
+
+### **How to Contribute**
+
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit changes**: `git commit -m 'Add amazing feature'`
+4. **Push to branch**: `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
+
+### **Code Standards**
+
+- **Python**: Follow PEP 8, use type hints
+- **TypeScript**: Use strict mode, ESLint
+- **Tests**: Maintain 80%+ coverage
+- **Commits**: Use conventional commits format
+
+### **Development Setup**
+
 ```bash
-# Clone repository
-git clone https://github.com/yourorg/schemaforge-ai.git
-cd schemaforge-ai
+# Install pre-commit hooks
+pre-commit install
 
-# Install dependencies
-npm install
-# or
-pip install -r requirements.txt
+# Run tests
+cd backend && pytest
+cd frontend && npm test
 
-# Set environment variables
-cp .env.example .env
-# Add your OpenAI API key
-
-# Start development server
-npm run dev
-# or
-python main.py
+# Lint code
+cd backend && flake8 .
+cd frontend && npm run lint
 ```
-
----
-
-## 🎯 Success Metrics
-
-- **Time Reduction**: 80% faster schema creation
-- **Error Reduction**: 60% fewer schema design errors
-- **User Adoption**: 90% developer satisfaction rate
-- **Coverage**: Support for 4+ database engines
-- **Accuracy**: 95% correct UML generation from prompts
-
----
-
-## 🤝 Team Roles
-
-- **Project Lead**: Overall coordination and architecture
-- **Frontend Developer**: React UI and UML editor
-- **Backend Developer**: API and LLM integration
-- **MDE Engineer**: Model transformations and code generation
-- **DevOps Engineer**: Deployment and infrastructure
-- **QA Engineer**: Testing and validation
-
----
-# 🔧 Complete Technology Stack & Implementation Plan
-
-## 🛠️ Detailed Technology Stack
-
-### **Frontend Layer**
-```javascript
-// Core Framework
-- React 18+ with TypeScript
-- Vite (Build tool) or Create React App
-- React Router v6 (Navigation)
-
-// UI Components & Styling
-- Tailwind CSS (Utility-first styling)
-- Headless UI or Radix UI (Accessible components)
-- Lucide React (Icons)
-- React Hot Toast (Notifications)
-
-// UML Diagram Editor
-- JointJS (Primary UML editor)
-- Fabric.js (Alternative drawing canvas)
-- React Flow (Node-based diagrams)
-- SVG.js (SVG manipulation)
-
-// State Management
-- Zustand or Redux Toolkit
-- React Query/TanStack Query (Server state)
-- React Hook Form (Form handling)
-
-// Utilities
-- Axios (HTTP client)
-- Date-fns (Date manipulation)
-- Lodash (Utility functions)
-```
-
-### **Backend Layer**
-```python
-# Core Framework (Option 1: Python)
-- FastAPI (Modern Python web framework)
-- Pydantic (Data validation)
-- SQLAlchemy (ORM)
-- Alembic (Database migrations)
-
-# Alternative: Node.js Stack
-- Express.js with TypeScript
-- Prisma ORM
-- Zod (Schema validation)
-- TypeORM
-```
-
-```dockerfile
-# Containerization
-- Docker & Docker Compose
-- Multi-stage builds
-- Health checks
-```
-
-### **AI/LLM Integration**
-```python
-# LLM APIs
-- OpenAI GPT-4 API
-- Anthropic Claude API
-- Azure OpenAI Service
-- Local models via Ollama (optional)
-
-# AI Libraries
-- LangChain (LLM orchestration)
-- LangSmith (Monitoring)
-- tiktoken (Token counting)
-- Instructor (Structured outputs)
-```
-
-### **Model-Driven Engineering**
-```python
-# MDE Framework (Custom)
-- Metamodel definitions (JSON Schema)
-- Model transformation engine
-- Template engine (Jinja2)
-- Validation engine
-
-# UML Processing
-- PlantUML integration
-- XMI format support
-- EMF (Eclipse Modeling Framework) compatibility
-```
-
-### **Database Layer**
-```sql
--- Application Database
-- PostgreSQL 15+ (Primary)
-- Redis (Caching & sessions)
-
--- Target Database Support
-- PostgreSQL
-- MySQL 8+
-- Oracle 19c+
-- SQL Server 2019+
-- SQLite (for testing)
-```
-
-### **DevOps & Infrastructure**
-```yaml
-# Cloud Platform
-- AWS/Azure/GCP
-- Terraform (Infrastructure as Code)
-- AWS RDS/Azure Database
-- AWS S3/Azure Blob Storage
-
-# CI/CD
-- GitHub Actions or GitLab CI
-- Docker Hub/AWS ECR
-- Automated testing
-- Security scanning
-
-# Monitoring
-- Prometheus + Grafana
-- Sentry (Error tracking)
-- OpenTelemetry (Observability)
-```
-
----
-
-## 🚀 Complete Implementation Roadmap
-
-### **Phase 1: Foundation & MVP (Months 1-2)**
-
-#### **Week 1-2: Project Setup**
-```bash
-# Repository Structure
-mkdir schemaforge-ai
-cd schemaforge-ai
-
-# Frontend setup
-npx create-react-app frontend --template typescript
-cd frontend
-npm install @tailwindcss/forms @headlessui/react lucide-react
-npm install jointjs fabric react-query axios
-
-# Backend setup
-cd ../
-mkdir backend
-cd backend
-pip install fastapi uvicorn sqlalchemy alembic
-pip install openai anthropic langchain pydantic
-```
-
-**Deliverables:**
-- [ ] Project repository with CI/CD pipeline
-- [ ] Basic React app with Tailwind CSS
-- [ ] FastAPI backend with database connection
-- [ ] Docker setup for local development
-- [ ] Environment configuration
-
-#### **Week 3-4: Core LLM Integration**
-```python
-# backend/services/llm_service.py
-class LLMService:
-    def __init__(self):
-        self.openai_client = OpenAI()
-    
-    async def analyze_prompt(self, prompt: str) -> AnalysisResult:
-        # Structured prompt for entity extraction
-        system_prompt = """
-        Extract database entities, attributes, and relationships 
-        from the user's description. Return structured JSON.
-        """
-        # Implementation here
-        
-    async def generate_uml(self, analysis: AnalysisResult) -> UMLDiagram:
-        # Generate UML from analysis
-        pass
-```
-
-**Deliverables:**
-- [ ] LLM prompt engineering for entity extraction
-- [ ] Structured output parsing
-- [ ] Basic UML data structure
-- [ ] API endpoints for prompt processing
-
-#### **Week 5-6: Basic UML Generation**
-```javascript
-// frontend/components/UMLEditor.tsx
-const UMLEditor = () => {
-    const [diagram, setDiagram] = useState(null);
-    
-    useEffect(() => {
-        // Initialize JointJS paper
-        const graph = new joint.dia.Graph();
-        const paper = new joint.dia.Paper({
-            el: paperRef.current,
-            model: graph,
-            width: 800,
-            height: 600
-        });
-    }, []);
-    
-    // Add entities, relationships
-};
-```
-
-**Deliverables:**
-- [ ] Interactive UML canvas
-- [ ] Entity creation and editing
-- [ ] Basic relationship drawing
-- [ ] UML validation
-
-#### **Week 7-8: PostgreSQL SQL Generation**
-```python
-# backend/generators/postgresql_generator.py
-class PostgreSQLGenerator:
-    def generate_table(self, entity: Entity) -> str:
-        sql = f"CREATE TABLE {entity.name.lower()}s (\n"
-        
-        for attr in entity.attributes:
-            sql += f"    {attr.name} {self.map_type(attr.type)}"
-            if attr.is_primary_key:
-                sql += " PRIMARY KEY"
-            sql += ",\n"
-            
-        return sql.rstrip(",\n") + "\n);"
-    
-    def map_type(self, uml_type: str) -> str:
-        type_mapping = {
-            "String": "VARCHAR(255)",
-            "Integer": "INTEGER",
-            "Date": "TIMESTAMP",
-            # ... more mappings
-        }
-        return type_mapping.get(uml_type, "TEXT")
-```
-
-**Deliverables:**
-- [ ] SQL template engine
-- [ ] PostgreSQL-specific generation
-- [ ] Foreign key relationships
-- [ ] Basic constraints and indexes
-
----
-
-### **Phase 2: Enhanced UML & Multi-DB (Months 3-4)**
-
-#### **Week 9-10: Advanced UML Editor**
-```javascript
-// Enhanced UML features
-- Drag & drop entity creation
-- Property panels for editing
-- Relationship types (1:1, 1:N, N:M)
-- UML export/import (JSON, XMI)
-- Undo/redo functionality
-```
-
-**Technical Implementation:**
-```javascript
-// frontend/hooks/useUMLEditor.ts
-export const useUMLEditor = () => {
-    const [entities, setEntities] = useState([]);
-    const [relationships, setRelationships] = useState([]);
-    
-    const addEntity = (entity: Entity) => {
-        setEntities(prev => [...prev, entity]);
-    };
-    
-    const addRelationship = (rel: Relationship) => {
-        setRelationships(prev => [...prev, rel]);
-    };
-    
-    // ... more UML operations
-};
-```
-
-#### **Week 11-12: Database Engine Abstraction**
-```python
-# backend/generators/base_generator.py
-class BaseGenerator(ABC):
-    @abstractmethod
-    def generate_table(self, entity: Entity) -> str:
-        pass
-    
-    @abstractmethod
-    def generate_constraints(self, relationships: List[Relationship]) -> str:
-        pass
-
-# backend/generators/mysql_generator.py
-class MySQLGenerator(BaseGenerator):
-    def generate_table(self, entity: Entity) -> str:
-        # MySQL-specific implementation
-        sql = f"CREATE TABLE {entity.name.lower()}s (\n"
-        # ... MySQL syntax
-        
-# backend/generators/oracle_generator.py  
-class OracleGenerator(BaseGenerator):
-    def generate_table(self, entity: Entity) -> str:
-        # Oracle-specific implementation
-        pass
-```
-
-**Deliverables:**
-- [ ] Abstract generator interface
-- [ ] MySQL generator implementation
-- [ ] Oracle generator implementation
-- [ ] SQL Server generator implementation
-- [ ] Engine-specific optimizations
-
-#### **Week 13-14: UML Validation & Enhancement**
-```python
-# backend/validators/uml_validator.py
-class UMLValidator:
-    def validate_diagram(self, diagram: UMLDiagram) -> ValidationResult:
-        errors = []
-        warnings = []
-        
-        # Check for orphaned entities
-        # Validate relationship cardinalities
-        # Ensure primary keys exist
-        # Check for circular dependencies
-        
-        return ValidationResult(errors, warnings)
-```
-
-#### **Week 15-16: Performance & Optimization**
-```python
-# Caching layer
-- Redis for LLM response caching
-- Database query optimization
-- SQL generation caching
-- Frontend bundle optimization
-```
-
----
-
-### **Phase 3: Advanced Features (Months 5-6)**
-
-#### **Week 17-18: Hand-drawn UML Recognition**
-```python
-# backend/services/vision_service.py
-class VisionService:
-    def __init__(self):
-        self.client = OpenAI()
-    
-    async def recognize_diagram(self, image_data: bytes) -> UMLDiagram:
-        # Use GPT-4 Vision API
-        response = await self.client.chat.completions.create(
-            model="gpt-4-vision-preview",
-            messages=[{
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": "Extract UML entities and relationships"},
-                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
-                ]
-            }]
-        )
-        # Parse response into UMLDiagram
-```
-
-**Implementation Steps:**
-1. Image upload component
-2. Computer vision integration
-3. UML structure extraction
-4. Diagram reconstruction
-
-#### **Week 19-20: Advanced SQL Features**
-```sql
--- Advanced SQL generation features
-- Indexes optimization
-- Partitioning strategies
-- Stored procedures
-- Views generation
-- Triggers for business logic
-- Data migration scripts
-```
-
-#### **Week 21-22: Reverse Engineering**
-```python
-# backend/services/reverse_engineer.py
-class ReverseEngineer:
-    async def analyze_database(self, connection_string: str) -> UMLDiagram:
-        # Connect to existing database
-        # Extract schema information
-        # Generate UML representation
-        # Infer relationships from foreign keys
-```
-
-#### **Week 23-24: Team Collaboration**
-```javascript
-// Real-time collaboration features
-- WebSocket integration
-- Multi-user editing
-- Version control for diagrams
-- Comments and annotations
-- Export/sharing capabilities
-```
-
----
-
-### **Phase 4: Production & Scale (Months 7-8)**
-
-#### **Week 25-26: Security & Authentication**
-```python
-# backend/auth/
-- JWT authentication
-- Role-based access control
-- API rate limiting
-- Input sanitization
-- SQL injection prevention
-```
-
-#### **Week 27-28: Testing & Quality**
-```python
-# Comprehensive testing
-- Unit tests (pytest, jest)
-- Integration tests
-- End-to-end tests (Playwright)
-- Performance testing
-- Security testing
-```
-
-#### **Week 29-30: Deployment & Monitoring**
-```yaml
-# kubernetes/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: schemaforge-api
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: schemaforge-api
-  template:
-    spec:
-      containers:
-      - name: api
-        image: schemaforge/api:latest
-        ports:
-        - containerPort: 8000
-```
-
-#### **Week 31-32: Launch & Optimization**
-```bash
-# Production checklist
-- [ ] Load balancer setup
-- [ ] Database backups
-- [ ] SSL certificates
-- [ ] CDN configuration
-- [ ] Monitoring dashboards
-- [ ] Error alerting
-```
-
----
-
-## 📋 Implementation Checklist by Component
-
-### **Backend API Endpoints**
-```python
-# Core endpoints to implement
-POST   /api/v1/analyze              # Analyze natural language prompt
-POST   /api/v1/uml/generate         # Generate UML from analysis
-PUT    /api/v1/uml/validate         # Validate UML diagram
-POST   /api/v1/sql/generate         # Generate SQL from UML
-GET    /api/v1/databases            # List supported databases
-POST   /api/v1/vision/recognize     # Recognize hand-drawn diagrams
-POST   /api/v1/reverse-engineer     # Reverse engineer existing DB
-```
-
-### **Frontend Components**
-```javascript
-// Component hierarchy
-App
-├── Header (Navigation, DB selector)
-├── Sidebar (Steps, scenarios)
-├── Main
-│   ├── PromptInput
-│   ├── UMLEditor
-│   │   ├── Canvas
-│   │   ├── Toolbar
-│   │   └── PropertyPanel
-│   ├── SQLOutput
-│   └── ProgressSteps
-└── Footer
-```
-
-### **Database Schema**
-```sql
--- Application database tables
-CREATE TABLE projects (
-    id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    created_by UUID NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE uml_diagrams (
-    id UUID PRIMARY KEY,
-    project_id UUID REFERENCES projects(id),
-    diagram_data JSONB NOT NULL,
-    version INTEGER DEFAULT 1,
-    created_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE generated_sql (
-    id UUID PRIMARY KEY,
-    diagram_id UUID REFERENCES uml_diagrams(id),
-    database_type VARCHAR(50) NOT NULL,
-    sql_content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-);
-```
-
----
-
-## 🎯 Success Metrics & KPIs
-
-### **Technical Metrics**
-- **API Response Time**: < 2 seconds for SQL generation
-- **UML Generation Accuracy**: > 95% correct entities
-- **Database Support**: 4+ database engines
-- **Uptime**: 99.9% availability
-
-### **User Metrics**
-- **Time Reduction**: 80% faster than manual design
-- **User Satisfaction**: > 4.5/5 rating
-- **Adoption Rate**: 100+ active users in first month
-- **Error Reduction**: 60% fewer schema design errors
-
-This comprehensive plan covers everything from initial setup to production deployment, with specific technologies, implementation details, and measurable success criteria.
-
----
-## 📅 Project Timeline
-
-| Phase | Duration | Deliverables |
-|-------|----------|--------------|
-| Phase 1 | 2 months | MVP with basic functionality |
-| Phase 2 | 2 months | UML editor and validation |
-| Phase 3 | 2 months | Multi-database support |
-| Phase 4 | 2 months | Advanced AI features |
-
----
-
-## 📚 Resources & References
-
-- [Model-Driven Engineering Principles](https://en.wikipedia.org/wiki/Model-driven_engineering)
-- [UML Database Modeling Best Practices](https://www.uml-diagrams.org/)
-- [SQL Standards Documentation](https://www.iso.org/standard/63555.html)
-- [OpenAI API Documentation](https://platform.openai.com/docs)
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+```
+MIT License
+
+Copyright (c) 2025 NL2SQL Generator Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software...
+```
 
 ---
 
-**Ready to transform database design? Let's build the future of schema generation! 🚀**
+## 📧 Contact & Support
+
+- **Documentation**: [docs.nl2sql.dev](https://docs.nl2sql.dev)
+- **Issues**: [GitHub Issues](https://github.com/your-org/nl2sql-generator/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/your-org/nl2sql-generator/discussions)
+- **Email**: support@nl2sql.dev
+
+---
+
+## 🎓 Academic Use
+
+This project is designed for academic and research purposes. If you use this in your research, please cite:
+
+```bibtex
+@software{nl2sql_generator_2025,
+  title = {NL2SQL Generator: AI-Powered Database Schema Designer},
+  author = {Your Name},
+  year = {2025},
+  url = {https://github.com/your-org/nl2sql-generator}
+}
+```
+
+---
+
+## 🙏 Acknowledgments
+
+- **Ollama Team** - Local LLM deployment
+- **Meta AI** - Llama 3.1 model
+- **PlantUML** - Diagram generation
+- **FastAPI** - Web framework
+- **React Team** - Frontend framework
+- **Joint.js** - Diagram editor library
+
+---
+
+## 🚀 Quick Start Summary
+
+```bash
+# 1. Clone & setup
+git clone https://github.com/your-org/nl2sql-generator.git
+cd nl2sql-generator
+
+# 2. Install Ollama + model
+ollama pull llama3.1:70b
+
+# 3. Run with Docker
+docker-compose up --build
+
+# 4. Open browser
+http://localhost:3000
+
+# 5. Start designing! 🎉
+```
+
+---
+
+**Built with ❤️ for the academic community**
+
+**Transform ideas into databases in minutes, not hours!** 🚀
