@@ -1,4 +1,4 @@
-# 🗄️ NL2SQL Generator
+<img width="1856" height="960" alt="image" src="https://github.com/user-attachments/assets/8d0bdc9f-8360-4522-bed9-343e308b3268" /># 🗄️ NL2SQL Generator
 
 ## AI-Powered Database Schema Designer with Natural Language Processing
 
@@ -1403,6 +1403,9 @@ Response:
   "execution_time_ms": 1250
 }
 ```
+
+<img width="1856" height="960" alt="image" src="https://github.com/user-attachments/assets/ab3f212f-1731-4448-a3a6-1b544e8231b3" />
+<img width="1857" height="959" alt="image" src="https://github.com/user-attachments/assets/000e6879-cef1-4c54-9bf4-621d356004ed" />
 
 #### **6. Export**
 
