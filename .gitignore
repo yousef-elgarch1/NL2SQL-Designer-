@@ -60,6 +60,7 @@ exports/
 
 # Documentation files (guides and test files)
 *.md
+!README.md
 test_*.py
 view_*.py
 nul
