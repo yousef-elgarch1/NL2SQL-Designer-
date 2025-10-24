@@ -1,0 +1,13 @@
+# Screenshots Directory
+
+Place your application screenshots here:
+
+- step1-input.png - Natural language input screen
+- step2-validation.png - Prompt validation results
+- step3-entities.png - Entity extraction display
+- step4-editor.png - Metamodel editor interface
+- step5-sql.png - SQL code generation
+- database-connection.png - Database connection form
+- uml-diagrams.png - PlantUML/Mermaid diagrams
+- optimization.png - Schema optimization suggestions
+- sample-data.png - Sample data generator
