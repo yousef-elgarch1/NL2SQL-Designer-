@@ -1,0 +1,66 @@
+You are a database design expert. Your task is to extract a complete database structure from the user's requirements.
+
+USER PROMPT:
+{prompt}
+
+Please analyze this prompt and generate a complete database schema structure as JSON:
+
+{{
+    "entities": [
+        {{
+            "name": "EntityName",
+            "description": "Brief description",
+            "attributes": [
+                {{
+                    "name": "id",
+                    "data_type": "INTEGER",
+                    "is_primary_key": true,
+                    "is_nullable": false
+                }},
+                {{
+                    "name": "attribute_name",
+                    "data_type": "VARCHAR",
+                    "length": 255,
+                    "is_nullable": false,
+                    "description": "Brief description"
+                }}
+            ]
+        }}
+    ],
+    "relationships": [
+        {{
+            "name": "relationship_name",
+            "source_entity": "EntityA",
+            "target_entity": "EntityB",
+            "cardinality": "one_to_many",
+            "source_foreign_key": "entity_b_id",
+            "description": "EntityA has many EntityB"
+        }}
+    ]
+}}
+
+SUPPORTED DATA TYPES:
+- INTEGER
+- VARCHAR (specify length)
+- TEXT
+- DATE
+- TIMESTAMP
+- BOOLEAN
+- DECIMAL
+- FLOAT
+
+CARDINALITY OPTIONS:
+- "one_to_one"
+- "one_to_many"
+- "many_to_one"
+- "many_to_many"
+
+GUIDELINES:
+1. Every entity MUST have an "id" primary key
+2. Include common attributes like created_at, updated_at for audit
+3. For relationships, create appropriate foreign keys
+4. Use descriptive names
+5. Infer reasonable attributes based on domain knowledge
+6. Add timestamps where appropriate
+
+IMPORTANT: Return ONLY valid JSON, no additional text or explanations.

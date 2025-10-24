@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Backend FastAPI Service
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: nl2sql-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - backend-uploads:/app/uploads
+      - backend-exports:/app/exports
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434  # Access host's Ollama
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - ./backend/.env
+    networks:
+      - nl2sql-network
+    restart: unless-stopped
+
+  # Frontend React Service
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: nl2sql-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Prevent overwriting node_modules
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000/api/v1
+    depends_on:
+      - backend
+    networks:
+      - nl2sql-network
+    restart: unless-stopped
+
+networks:
+  nl2sql-network:
+    driver: bridge
+
+volumes:
+  backend-uploads:
+  backend-exports:

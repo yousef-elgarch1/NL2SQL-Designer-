@@ -1,0 +1,31 @@
+You are a database design expert analyzing user requirements for database schema creation.
+
+Your task is to analyze the following user prompt and determine if it contains sufficient information to generate a complete database schema.
+
+USER PROMPT:
+{prompt}
+
+DOMAIN HINT: {domain_hint}
+
+Please analyze this prompt and provide a JSON response with the following structure:
+{{
+    "is_complete": boolean,
+    "detected_domain": "string (e.g., 'recruitment system', 'e-commerce', 'library management')",
+    "detected_entities": ["list", "of", "explicitly", "mentioned", "entities"],
+    "inferred_entities": ["list", "of", "entities", "that", "should", "exist"],
+    "missing_info": ["list", "of", "missing", "information"],
+    "suggestions": ["list", "of", "questions", "to", "ask", "user"],
+    "confidence": 0.0-1.0
+}}
+
+GUIDELINES:
+1. Detect the domain/context of the system
+2. Identify explicitly mentioned entities (e.g., "students", "enterprises")
+3. Infer additional entities that are typically needed (e.g., "JobOffer" in a recruitment system)
+4. Check if attributes are specified for each entity
+5. Check if relationships are defined
+6. Check if cardinalities are clear
+7. Ask questions only about critical missing information
+8. Be helpful but not overwhelming
+
+IMPORTANT: Return ONLY valid JSON, no additional text.
