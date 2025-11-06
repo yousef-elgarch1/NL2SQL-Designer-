@@ -42,7 +42,7 @@
 
 | Role | Name | GitHub |
 |------|------|--------|
-| 🎯 **Team Lead & Backend Architect** | Youssef ELGARCH | [@yousef-elgarch1](https://github.com/yousef-elgarch1) |
+| 🎯 **Backend Architect** | Youssef ELGARCH | [@yousef-elgarch1](https://github.com/yousef-elgarch1) |
 | 🎨 **Frontend Developer** | ELGHEFYRY Salma | - |
 | 💾 **Database Specialist** | NIJADI Jihane | - |
 | 🏗️ **MDE & Metamodel Designer** | Doha NEGRAOUI | - |
@@ -249,7 +249,7 @@ graph LR
 <div align="center">
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#3b82f6','primaryTextColor':'#fff','primaryBorderColor':'#2563eb','lineColor':'#10b981','secondaryColor':'#8b5cf6','tertiaryColor':'#f59e0b','background':'#1f2937','mainBkg':'#374151','secondBkg':'#4b5563','textColor':'#f3f4f6','fontSize':'14px','fontFamily':'Arial'}}}%%
+
 mindmap
   root((NL2SQL<br/>Innovation))
     AI-Powered MDE
@@ -589,7 +589,6 @@ graph TB
 ### 🏛️ Class Diagram - Core Metamodel
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#3b82f6','primaryTextColor':'#fff','primaryBorderColor':'#2563eb','lineColor':'#10b981','secondaryColor':'#8b5cf6','tertiaryColor':'#f59e0b','background':'#1f2937','mainBkg':'#374151','secondBkg':'#4b5563','textColor':'#f3f4f6','fontSize':'13px','classBkg':'#374151','classBorder':'#6b7280'}}}%%
 classDiagram
     class Metamodel {
         +List~Entity~ entities
@@ -711,7 +710,7 @@ sequenceDiagram
 ### ⚙️ Activity Diagram - Complete Workflow
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#3b82f6','primaryTextColor':'#fff','primaryBorderColor':'#2563eb','lineColor':'#10b981','secondaryColor':'#8b5cf6','tertiaryColor':'#f59e0b','background':'#1f2937','mainBkg':'#374151','secondBkg':'#4b5563','textColor':'#f3f4f6','fontSize':'14px','edgeLabelBackground':'#1f2937'}}}%%
+
 graph TD
     Start([👤 User Starts]) --> Input[📝 Enter Natural Language<br/>Description]
     Input --> Validate{✅ Valid<br/>Prompt?}
