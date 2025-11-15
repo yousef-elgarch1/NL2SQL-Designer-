@@ -6,7 +6,7 @@
 
 **A Model-Driven Engineering Approach Powered by AI**
 
-<img src="https://raw.githubusercontent.com/yousef-elgarch1/NL2SQL-Designer-/main/docs/assets/banner.png" alt="NL2SQL Designer Banner" width="100%"/>
+<img src="https://cdn.pixabay.com/photo/2024/01/29/22/47/ai-generated-8540917_640.jpg" alt="NL2SQL Designer Banner" width="100%"/>
 
 ---
 
@@ -42,7 +42,7 @@
 
 | Role | Name | GitHub |
 |------|------|--------|
-| 🎯 **Team Lead & Backend Architect** | Youssef ELGARCH | [@yousef-elgarch1](https://github.com/yousef-elgarch1) |
+| 🎯 **Backend Architect** | Youssef ELGARCH | [@yousef-elgarch1](https://github.com/yousef-elgarch1) |
 | 🎨 **Frontend Developer** | ELGHEFYRY Salma | - |
 | 💾 **Database Specialist** | NIJADI Jihane | - |
 | 🏗️ **MDE & Metamodel Designer** | Doha NEGRAOUI | - |
@@ -145,7 +145,7 @@ By leveraging **Model-Driven Engineering (MDE)** principles and **Large Language
 <tr>
 <td align="center" width="50%">
 
-<img src="https://raw.githubusercontent.com/groq/groq-python/main/docs/groq-logo.png" alt="Groq Logo" width="200"/>
+<img src="https://th.bing.com/th/id/OIP.6JJwqsDkeuOOOTsFqM64fwHaEc?w=281&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3" alt="Groq Logo" width="200"/>
 
 ### **Groq**
 **The World's Fastest LLM Inference**
@@ -153,7 +153,7 @@ By leveraging **Model-Driven Engineering (MDE)** principles and **Large Language
 </td>
 <td align="center" width="50%">
 
-<img src="https://llama.meta.com/llama-logo.png" alt="Llama Logo" width="200"/>
+<img src="https://tse2.mm.bing.net/th/id/OIP.woTiv9SeRjAkusT2R57btAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Llama Logo" width="200"/>
 
 ### **Meta Llama 3.1**
 **State-of-the-Art Open Source LLM**
@@ -214,7 +214,7 @@ By leveraging **Model-Driven Engineering (MDE)** principles and **Large Language
 ### Performance Comparison
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#10b981','primaryTextColor':'#fff','primaryBorderColor':'#059669','lineColor':'#3b82f6','secondaryColor':'#8b5cf6','tertiaryColor':'#f59e0b','background':'#1f2937','mainBkg':'#374151','secondBkg':'#4b5563','textColor':'#f3f4f6','fontSize':'16px'}}}%%
+
 graph LR
     subgraph "Traditional GPU Inference"
         A1[Request] -->|500ms| B1[OpenAI GPT-4]
@@ -249,7 +249,7 @@ graph LR
 <div align="center">
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#3b82f6','primaryTextColor':'#fff','primaryBorderColor':'#2563eb','lineColor':'#10b981','secondaryColor':'#8b5cf6','tertiaryColor':'#f59e0b','background':'#1f2937','mainBkg':'#374151','secondBkg':'#4b5563','textColor':'#f3f4f6','fontSize':'14px','fontFamily':'Arial'}}}%%
+
 mindmap
   root((NL2SQL<br/>Innovation))
     AI-Powered MDE
@@ -589,7 +589,6 @@ graph TB
 ### 🏛️ Class Diagram - Core Metamodel
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#3b82f6','primaryTextColor':'#fff','primaryBorderColor':'#2563eb','lineColor':'#10b981','secondaryColor':'#8b5cf6','tertiaryColor':'#f59e0b','background':'#1f2937','mainBkg':'#374151','secondBkg':'#4b5563','textColor':'#f3f4f6','fontSize':'13px','classBkg':'#374151','classBorder':'#6b7280'}}}%%
 classDiagram
     class Metamodel {
         +List~Entity~ entities
@@ -711,7 +710,7 @@ sequenceDiagram
 ### ⚙️ Activity Diagram - Complete Workflow
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#3b82f6','primaryTextColor':'#fff','primaryBorderColor':'#2563eb','lineColor':'#10b981','secondaryColor':'#8b5cf6','tertiaryColor':'#f59e0b','background':'#1f2937','mainBkg':'#374151','secondBkg':'#4b5563','textColor':'#f3f4f6','fontSize':'14px','edgeLabelBackground':'#1f2937'}}}%%
+
 graph TD
     Start([👤 User Starts]) --> Input[📝 Enter Natural Language<br/>Description]
     Input --> Validate{✅ Valid<br/>Prompt?}
