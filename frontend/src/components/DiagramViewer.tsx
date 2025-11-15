@@ -1,19 +1,41 @@
 /**
  * Diagram Viewer Component
- * Displays Mermaid diagrams
+ * Displays Mermaid diagrams with optional edit mode
  */
 
-import React, { useEffect, useRef } from 'react'
-import { Paper, Typography, Box } from '@mui/material'
+import React, { useEffect, useRef, useState } from 'react'
+import {
+  Paper,
+  Typography,
+  Box,
+  Button,
+  ToggleButtonGroup,
+  ToggleButton,
+} from '@mui/material'
+import {
+  Visibility as ViewIcon,
+  Edit as EditIcon,
+} from '@mui/icons-material'
 import mermaid from 'mermaid'
+import InteractiveMermaidEditor from './InteractiveMermaidEditor'
 
 interface DiagramViewerProps {
   mermaidCode: string
   title?: string
+  metamodel?: any
+  onMetamodelChange?: (metamodel: any) => void
+  editable?: boolean
 }
 
-const DiagramViewer: React.FC<DiagramViewerProps> = ({ mermaidCode, title = 'Database Diagram' }) => {
+const DiagramViewer: React.FC<DiagramViewerProps> = ({
+  mermaidCode,
+  title = 'Database Diagram',
+  metamodel,
+  onMetamodelChange,
+  editable = true,
+}) => {
   const diagramRef = useRef<HTMLDivElement>(null)
+  const [viewMode, setViewMode] = useState<'view' | 'edit'>('view')
 
   useEffect(() => {
     mermaid.initialize({
@@ -48,11 +70,68 @@ const DiagramViewer: React.FC<DiagramViewerProps> = ({ mermaidCode, title = 'Dat
     renderDiagram()
   }, [mermaidCode])
 
+  // If edit mode and metamodel available, show interactive editor
+  if (viewMode === 'edit' && metamodel && editable) {
+    return (
+      <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6">{title}</Typography>
+          <ToggleButtonGroup
+            value={viewMode}
+            exclusive
+            onChange={(e, newMode) => {
+              if (newMode !== null) {
+                setViewMode(newMode)
+              }
+            }}
+            size="small"
+          >
+            <ToggleButton value="view">
+              <ViewIcon fontSize="small" sx={{ mr: 1 }} />
+              Lecture
+            </ToggleButton>
+            <ToggleButton value="edit">
+              <EditIcon fontSize="small" sx={{ mr: 1 }} />
+              Édition
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+        <InteractiveMermaidEditor
+          initialMetamodel={metamodel}
+          mermaidCode={mermaidCode}
+          onMetamodelChange={onMetamodelChange}
+        />
+      </Paper>
+    )
+  }
+
+  // Default view mode
   return (
     <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        {title}
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6">{title}</Typography>
+        {editable && metamodel && (
+          <ToggleButtonGroup
+            value={viewMode}
+            exclusive
+            onChange={(e, newMode) => {
+              if (newMode !== null) {
+                setViewMode(newMode)
+              }
+            }}
+            size="small"
+          >
+            <ToggleButton value="view">
+              <ViewIcon fontSize="small" sx={{ mr: 1 }} />
+              Lecture
+            </ToggleButton>
+            <ToggleButton value="edit">
+              <EditIcon fontSize="small" sx={{ mr: 1 }} />
+              Édition
+            </ToggleButton>
+          </ToggleButtonGroup>
+        )}
+      </Box>
 
       <Box
         ref={diagramRef}
@@ -69,9 +148,7 @@ const DiagramViewer: React.FC<DiagramViewerProps> = ({ mermaidCode, title = 'Dat
         }}
       >
         {!mermaidCode && (
-          <Typography color="text.secondary">
-            No diagram generated yet
-          </Typography>
+          <Typography color="text.secondary">No diagram generated yet</Typography>
         )}
       </Box>
     </Paper>

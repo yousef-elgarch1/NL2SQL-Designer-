@@ -419,7 +419,7 @@ function App() {
           {/* Header */}
           <Box sx={{ mb: 4, textAlign: 'center' }}>
             <Typography variant="h3" component="h1" gutterBottom>
-              🗄️ NL2SQL Generator
+              NL2SQL Generator
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
               AI-Powered Database Schema Designer - Complete your database in 4 easy steps
@@ -871,7 +871,15 @@ function App() {
                     <>
                       {/* Mermaid Diagram */}
                       {diagramFormat === 'mermaid' && mermaidCode && (
-                        <DiagramViewer mermaidCode={mermaidCode} />
+                        <DiagramViewer
+                          mermaidCode={mermaidCode}
+                          metamodel={metamodel}
+                          onMetamodelChange={(updatedMetamodel) => {
+                            setMetamodel(updatedMetamodel)
+                            // Optionally regenerate diagram here
+                          }}
+                          editable={true}
+                        />
                       )}
 
                       {/* PlantUML Diagram */}
